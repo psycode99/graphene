@@ -4,11 +4,11 @@ import os
 
 
 class Query(graphene.ObjectType):
-    name = graphene.String()
+    name = graphene.String(value=graphene.String(default_value="Kengan Ashura"))
     age = graphene.String()
 
-    def resolve_name(root, info):
-        return "Meekasan"
+    def resolve_name(root, info, value):
+        return "hello {}".format(value)
     
     def resolve_age(root, info):
         return "34"
@@ -21,7 +21,8 @@ print(schema)
 
 test_query = """
 query myquery {
-    name
+    name (value: "Ohma Tokita")
+    age
     
 }
 """
