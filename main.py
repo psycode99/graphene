@@ -3,15 +3,32 @@ import graphene
 import os
 
 
-class Query(graphene.ObjectType):
-    name = graphene.String(value=graphene.String(default_value="Kengan Ashura"))
+DATA = [
+    {
+        "name": "Sekibayashi",
+        "age": "34"
+    }, 
+
+    {
+        "name": "Adam Dudley",
+        "age": "45"
+    }
+]
+
+
+class Person(graphene.ObjectType):
+    name = graphene.String()
     age = graphene.String()
 
-    def resolve_name(root, info, value):
-        return "hello {}".format(value)
+
+class Query(graphene.ObjectType):
+    array = graphene.List(Person, size=graphene.Int(default_value=1))
+
+
+    def resolve_array(root, info, size):
+        return DATA[:size]
     
-    def resolve_age(root, info):
-        return "34"
+    
     
 
 schema = graphene.Schema(query=Query)
@@ -21,8 +38,9 @@ print(schema)
 
 test_query = """
 query myquery {
-    name (value: "Ohma Tokita")
-    age
+    array (size: 2) {
+        name
+    }
     
 }
 """
