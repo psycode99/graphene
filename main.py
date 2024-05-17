@@ -21,17 +21,40 @@ class Person(graphene.ObjectType):
     age = graphene.String()
 
 
+
+    
+
+class CreatePerson(graphene.Mutation):
+    class Arguments:
+        name = graphene.String()
+
+    ok = graphene.Boolean()
+    person = graphene.Field(Person)
+
+
+    def mutate(self, info, name):
+        person = Person(name=name)
+        ok = True
+        return CreatePerson(person=person, ok=ok)
+    
+
+class MyMutation(graphene.ObjectType):
+    create_person = CreatePerson.Field()
+
+
 class Query(graphene.ObjectType):
-    array = graphene.List(Person, size=graphene.Int(default_value=1))
+    person = graphene.Field(Person)
+
+    # for List
+    # array = graphene.List(Person, size=graphene.Int(default_value=1))
 
 
-    def resolve_array(root, info, size):
-        return DATA[:size]
-    
+    # def resolve_array(root, info, size):
+    #     return DATA[:size]
     
     
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=MyMutation)
 print(schema)
 
 # query
